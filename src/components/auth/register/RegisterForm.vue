@@ -47,27 +47,37 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { registerUser } from '../../../services/authService';
 
 export default defineComponent({
   name: 'RegisterForm',
   setup() {
     const form = reactive({
       username: '',
-      email: '', // Changed from 'name' to 'email'
+      email: '',
       password: '',
       confirmPassword: '',
     });
     const router = useRouter();
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       if (form.password !== form.confirmPassword) {
         alert('¡Las contraseñas no coinciden!');
         return;
       }
-      console.log('Formulario enviado:', form);
 
-      // Simular registro exitoso y redirigir al login
-      router.push('/login');
+      try {
+        const response = await registerUser(form.email, form.password, form.username);
+        if (response.success) {
+          alert(response.message);
+          router.push('/login'); // Redirect to login page
+        } else {
+          alert(response.message);
+        }
+      } catch (error) {
+        console.error('Error during registration:', error);
+        alert('Ocurrió un error al registrarse. Inténtelo de nuevo.');
+      }
     };
 
     return {
