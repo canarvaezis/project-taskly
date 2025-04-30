@@ -2,17 +2,18 @@
 import { ref, computed, defineProps } from 'vue';
 import TaskCards from './TaskCards.vue';
 
-const { tasks } = defineProps<{ tasks: { id: number; title: string; description: string; isFavorite: boolean }[] }>();
+// Recibe las tareas como una propiedad
+const props = defineProps<{ tasks: { id: string; title: string; description: string; isFavorite: boolean }[] }>();
 
 const currentPage = ref(1);
-const itemsPerPage = 4; // Number of items per page
+const itemsPerPage = 4; // Número de elementos por página
 
-const totalPages = computed(() => Math.ceil(tasks.length / itemsPerPage));
+const totalPages = computed(() => Math.ceil(props.tasks.length / itemsPerPage));
 
 const paginatedTasks = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  return tasks.slice(start, end);
+  return props.tasks.slice(start, end);
 });
 
 const goToPage = (page: number) => {

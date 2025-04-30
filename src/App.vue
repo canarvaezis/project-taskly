@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import mainView from './views/mainView.vue';
+import TaskView from './views/TaskView.vue';
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 </script>
@@ -9,7 +9,7 @@ import AppFooter from './components/AppFooter.vue';
 <template>
   <AppHeader />
   <main class="mt-5 pt-5 pb-5">
-    <mainView />
+    <TaskView />
   </main>
   <AppFooter />
 </template>

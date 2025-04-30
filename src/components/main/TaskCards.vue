@@ -13,6 +13,10 @@ defineProps<{ tasks: Task[] }>();
 const toggleFavorite = (task: Task) => {
   task.isFavorite = !task.isFavorite;
 };
+
+const truncateText = (text: string, maxLength: number) => {
+  return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+};
 </script>
 
 <template>
@@ -23,8 +27,8 @@ const toggleFavorite = (task: Task) => {
           <div class="checkbox-placeholder"></div>
         </div>
         <div class="task-content flex-grow-1">
-          <h3 class="task-title">{{ task.title }}</h3>
-          <p class="task-description">{{ task.description }}</p>
+          <h3 class="task-title">{{ truncateText(task.title, 40) }}</h3>
+          <p class="task-description">{{ truncateText(task.description, 70) }}</p>
         </div>
         <div class="task-actions d-flex gap-2">
           <button class="btn btn-link p-0" @click="toggleFavorite(task)">

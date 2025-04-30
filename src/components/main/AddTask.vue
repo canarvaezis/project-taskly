@@ -1,9 +1,11 @@
 <script lang="ts">
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
+import { saveTaskToFirestore } from '@/services/taskService';
 
 export default {
   name: 'AddTask',
   setup() {
+    const emit = defineEmits(['taskAdded']); // Define el evento 'taskAdded'
     const showPopup = ref(false);
     const title = ref('');
     const description = ref('');
@@ -16,19 +18,36 @@ export default {
       notification.value = ''; // Clear notification when popup is toggled
     };
 
-    const saveTask = (e: Event) => {
+    const saveTask = async (e: Event) => {
       e.preventDefault();
       if (title.value.trim().length < 3) {
         notification.value = 'El título debe tener al menos 3 caracteres.';
         return;
       }
-      notification.value = 'Tarea guardada exitosamente.';
-      // Reset form fields
-      title.value = '';
-      description.value = '';
-      deadline.value = '';
-      priority.value = 'media';
+
+      const task = {
+        id: Date.now().toString(), // Generate a unique ID
+        title: title.value,
+        description: description.value,
+        deadline: deadline.value,
+        priority: priority.value,
+        isFavorite: false, // Default value for isFavorite
+      };
+
+      const result = await saveTaskToFirestore(task);
+      notification.value = result.message;
+
+      // Cierra el popup independientemente del resultado
       togglePopup();
+
+      if (result.success) {
+        emit('taskAdded'); // Emite el evento cuando se guarda la tarea
+        // Reset form fields
+        title.value = '';
+        description.value = '';
+        deadline.value = '';
+        priority.value = 'media';
+      }
     };
 
     return {
