@@ -64,6 +64,11 @@ main {
   flex: 1;
   text-align: center;
   padding: 0.5rem;
+  font-size: 0.76rem; /* Smaller font size */
+}
+
+.btn-link i {
+  font-size: 1rem; /* Adjust icon size */
 }
 
 .btn-link:hover {
