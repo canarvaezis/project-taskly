@@ -11,11 +11,11 @@
       />
     </div>
     <div class="mb-3">
-      <label for="name" class="form-label">Nombre</label>
+      <label for="email" class="form-label">Correo</label>
       <input
-        type="text"
-        id="name"
-        v-model="form.name"
+        type="email"
+        id="email"
+        v-model="form.email"
         class="form-control"
         required
       />
@@ -53,7 +53,7 @@ export default defineComponent({
   setup() {
     const form = reactive({
       username: '',
-      name: '',
+      email: '', // Changed from 'name' to 'email'
       password: '',
       confirmPassword: '',
     });
