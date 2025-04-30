@@ -34,7 +34,7 @@ import { ref, computed } from 'vue'
 const tasks = ref([
   { id: 1, title: 'Lavar el auto', completed: false },
   { id: 2, title: 'Hacer compras', completed: false },
-  { id: 3, title: 'Estudiar Vue', completed: false },
+  { id: 3, title: 'Estudiar ', completed: false },
 ])
 
 const showCompletedOnly = ref(false)
