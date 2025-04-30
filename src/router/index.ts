@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ListView from '../views/ListView.vue'
+import mainView from '../views/mainView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/tasks',
-      name: 'tasks',
-      component: ListView,
+      path: '/main/:userId',
+      name: 'main',
+      component: mainView,
     },
   ],
 })

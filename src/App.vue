@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import TaskList from './components/TaskList.vue';
+import mainView from './views/mainView.vue';
 </script>
 
 <template>
@@ -15,7 +15,7 @@ import TaskList from './components/TaskList.vue';
   </header>
 
   <main class="mt-5 pt-5 pb-5">
-    <TaskList />
+    <mainView />
   </main>
 
   <footer class="fixed-bottom bg-white shadow-sm">
