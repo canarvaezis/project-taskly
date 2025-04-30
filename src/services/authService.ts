@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { doc, setDoc } from 'firebase/firestore';
 
@@ -24,6 +24,25 @@ export const registerUser = async (email: string, password: string, name: string
   } catch (error: unknown) {
     console.error('Error registering user: ', error);
     const errorMessage = error instanceof Error ? error.message : 'Error al registrar el usuario. Inténtelo de nuevo.';
+    return {
+      success: false,
+      message: errorMessage,
+    };
+  }
+};
+
+// Function to log in a user with email and password
+export const loginUser = async (email: string, password: string) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return {
+      success: true,
+      message: 'Inicio de sesión exitoso.',
+      user: userCredential.user,
+    };
+  } catch (error: unknown) {
+    console.error('Error logging in user: ', error);
+    const errorMessage = error instanceof Error ? error.message : 'Error al iniciar sesión. Inténtelo de nuevo.';
     return {
       success: false,
       message: errorMessage,
