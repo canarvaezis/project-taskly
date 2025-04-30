@@ -5,6 +5,9 @@ import SearchBar from '../components/main/SearchBar.vue';
 import AddTask from '../components/main/AddTask.vue';
 import ListPagination from '../components/main/ListPagination.vue';
 
+import AppHeader from '../components/AppHeader.vue';
+import AppFooter from '../components/AppFooter.vue';
+
 import '../components/styles/TaskList.css';
 
 const tasks = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean }[]>([]);
@@ -40,6 +43,7 @@ const filteredTasks = computed(() => {
 </script>
 
 <template>
+  <AppHeader />
   <div class="task-list">
     <SearchBar @update:searchQuery="searchQuery = $event" />
     <AddTask @taskAdded="handleTaskAdded" /> <!-- Escucha el evento taskAdded -->
@@ -49,5 +53,5 @@ const filteredTasks = computed(() => {
       <ListPagination :tasks="filteredTasks" />
     </div>
   </div>
+  <AppFooter />
 </template>
-
