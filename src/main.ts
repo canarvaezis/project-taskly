@@ -12,8 +12,9 @@ import router from './router'
 // Verificar la clave desde el frontend
 const appKey = import.meta.env.VITE_APP_KEY; // Clave configurada en .env
 
-if (appKey !== 'abc123') {
-    throw new Error('Clave de aplicación inválida. No se puede iniciar la aplicación.');
+if (!appKey || appKey !== 'abc123') {
+    console.error(`Clave de aplicación inválida o no configurada. Valor proporcionado: "${appKey || 'undefined'}"`);
+    throw new Error('No se puede iniciar la aplicación debido a una clave inválida.');
 }
 
 const app = createApp(App)
