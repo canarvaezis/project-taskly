@@ -9,6 +9,13 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
+// Verificar la clave desde el frontend
+const appKey = import.meta.env.VITE_APP_KEY; // Clave configurada en .env
+
+if (appKey !== 'abc123') {
+    throw new Error('Clave de aplicación inválida. No se puede iniciar la aplicación.');
+}
+
 const app = createApp(App)
 
 app.use(createPinia())
