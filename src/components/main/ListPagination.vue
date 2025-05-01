@@ -3,10 +3,10 @@ import { ref, computed, defineProps } from 'vue';
 import TaskCards from './TaskCards.vue';
 
 // Recibe las tareas como una propiedad
-const props = defineProps<{ tasks: { id: string; title: string; description: string; isFavorite: boolean }[] }>();
+const props = defineProps<{ tasks: { id: string; title: string; description: string; isFavorite: boolean; deadline: string; priority: string; completed: boolean }[] }>();
 
 const currentPage = ref(1);
-const itemsPerPage = 4; // Número de elementos por página
+const itemsPerPage = 10; // Número de elementos por página
 
 const totalPages = computed(() => Math.ceil(props.tasks.length / itemsPerPage));
 
