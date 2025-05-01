@@ -24,6 +24,20 @@ export default {
         notification.value = 'El título debe tener al menos 3 caracteres.';
         return;
       }
+      if (!description.value.trim()) {
+        notification.value = 'La descripción no puede estar vacía.';
+        return;
+      }
+      if (!deadline.value) {
+        notification.value = 'Debe seleccionar una fecha y hora límite.';
+        return;
+      }
+      const currentDateTime = new Date();
+      const selectedDateTime = new Date(deadline.value);
+      if (selectedDateTime < currentDateTime) {
+        notification.value = 'La fecha y hora límite no pueden ser anteriores a la fecha actual.';
+        return;
+      }
 
       const task = {
         id: Date.now().toString(), // Generate a unique ID
