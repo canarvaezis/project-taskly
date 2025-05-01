@@ -7,27 +7,44 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+# Node modules
+node_modules/
+
+# Archivos del sistema
 .DS_Store
-dist
-dist-ssr
-coverage
+
+# Carpeta de distribución
+dist/
+dist-ssr/
+
+# Cobertura de pruebas
+coverage/
+
+# Archivos de configuración local
 *.local
 
+# Archivos de entorno
+.env
+.env.local
+.env.*.local
+
+# Cypress
 /cypress/videos/
 /cypress/screenshots/
 
-# Editor directories and files
+# Directorios y archivos del editor
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
+# Archivos de TypeScript
 *.tsbuildinfo
 
+# Resultados de pruebas y reporte de Playwright
 test-results/
 playwright-report/
