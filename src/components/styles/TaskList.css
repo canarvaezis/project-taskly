@@ -1,0 +1,159 @@
+.static-top {
+  position: fixed;
+  top: 60px;
+  width: 100%;
+  z-index: 1030;
+  background: white;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+  width: 100%;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+
+  top: 65px;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 1rem;
+  margin: 0;
+  z-index: 1020;
+}
+
+.search-container .input-group {
+  max-width: 600px;
+  width: 100%;
+}
+
+.search-container .input-group-text {
+  color: #908df3;
+}
+
+.search-container .form-control:focus {
+  border-color: #908df3;
+  box-shadow: none;
+}
+
+.add-task-container {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.add-task-btn {
+  border: 2px dashed #e9ecef;
+  color: #908df3;
+  background: white;
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+.add-task-btn:hover {
+  border-color: #908df3;
+  background: #f8f9fa;
+}
+
+.task-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.task-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9ecef;
+}
+
+.checkbox-placeholder {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e9ecef;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.task-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.task-description {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin: 0.25rem 0 0;
+}
+
+.task-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.task-actions .btn-link {
+  color: #908df3;
+  padding: 0.25rem;
+  font-size: 1rem;
+}
+
+.task-actions .btn-link:hover {
+  color: #716bee;
+}
+
+.pagination {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 1rem;
+  margin: 0;
+  z-index: 1020;
+}
+
+.pagination .btn {
+  border-color: #e9ecef;
+  color: #6c757d;
+  padding: 0.375rem 0.75rem;
+  background: white;
+}
+
+.pagination .btn:hover {
+  background-color: #908df3;
+  border-color: #908df3;
+  color: white;
+}
+
+.pagination .btn-primary {
+  background-color: #908df3 !important;
+  border-color: #908df3 !important;
+  color: white !important;
+}
+
+@media (min-width: 768px) {
+  .task-list {
+    padding: 0 1.5rem;
+    padding-bottom: 120px;
+  }
+
+  .task-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .task-card {
+    padding: 1.25rem;
+  }
+
+  .pagination {
+    padding: 1rem 1.5rem;
+  }
+}

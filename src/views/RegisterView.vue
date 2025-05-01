@@ -10,31 +10,31 @@
       </form>
     </div>
   </template>
-  
+
   <script lang="ts" setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  
+
   const router = useRouter()
   const email = ref('')
   const password = ref('')
   const registerSuccess = ref(false)
-  
+
   function handleRegister() {
     const user = {
       email: email.value,
       password: password.value
     }
-  
+
     localStorage.setItem('user', JSON.stringify(user))
     registerSuccess.value = true
-  
+
     setTimeout(() => {
       router.push('/login')
     }, 2000)
   }
   </script>
-  
+
   <style scoped>
   .login-container {
     display: flex;
@@ -43,7 +43,7 @@
     min-height: 100vh;
     background: linear-gradient(135deg, #2c3e50, #4ca1af);
   }
-  
+
   .login-form {
     background-color: #ffffff;
     padding: 40px 30px;
@@ -54,13 +54,13 @@
     flex-direction: column;
     gap: 20px;
   }
-  
+
   .login-form h2 {
     text-align: center;
     margin-bottom: 10px;
     color: #2c3e50;
   }
-  
+
   .login-form input {
     padding: 12px;
     font-size: 16px;
@@ -69,11 +69,11 @@
     outline: none;
     transition: border-color 0.3s;
   }
-  
+
   .login-form input:focus {
     border-color: #4ca1af;
   }
-  
+
   .login-form button {
     padding: 12px;
     font-size: 16px;
@@ -84,11 +84,11 @@
     cursor: pointer;
     transition: background-color 0.3s;
   }
-  
+
   .login-form button:hover {
     background-color: #398b98;
   }
-  
+
   .link {
     text-align: center;
     font-size: 14px;
@@ -96,18 +96,17 @@
     text-decoration: none;
     margin-top: -10px;
   }
-  
+
   .link:hover {
     text-decoration: underline;
   }
-  
+
   .message {
     text-align: center;
     font-weight: bold;
   }
-  
+
   .success {
     color: #2ecc71;
   }
   </style>
-  
