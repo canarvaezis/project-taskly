@@ -6,7 +6,7 @@ import TaskCards from './TaskCards.vue';
 const props = defineProps<{ tasks: { id: string; title: string; description: string; isFavorite: boolean; deadline: string; priority: string; completed: boolean }[] }>();
 
 const currentPage = ref(1);
-const itemsPerPage = 10; // Número de elementos por página
+const itemsPerPage = 4; // Número de elementos por página
 
 const totalPages = computed(() => Math.ceil(props.tasks.length / itemsPerPage));
 

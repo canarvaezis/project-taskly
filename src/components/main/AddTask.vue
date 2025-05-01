@@ -32,6 +32,7 @@ export default {
         deadline: deadline.value,
         priority: priority.value,
         isFavorite: false, // Default value for isFavorite
+        completed: false, // Default value for completed
       };
 
       const result = await saveTaskToFirestore(task);

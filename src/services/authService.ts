@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { doc, setDoc } from 'firebase/firestore';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 // Function to register a user with email and password
 export const registerUser = async (email: string, password: string, name: string) => {
@@ -47,5 +48,17 @@ export const loginUser = async (email: string, password: string) => {
       success: false,
       message: errorMessage,
     };
+  }
+};
+
+// Function to handle password recovery
+export const sendPasswordReset = async (email: string) => {
+  const auth = getAuth();
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return { success: true, message: 'Correo de recuperación enviado exitosamente.' };
+  } catch (error) {
+    console.error('Error sending password reset email: ', error);
+    return { success: false, message: 'Error al enviar el correo de recuperación.' };
   }
 };

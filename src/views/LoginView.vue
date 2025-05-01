@@ -7,6 +7,9 @@
         ¿No tienes una cuenta?
         <router-link to="/register">Regístrate aquí</router-link>
       </p>
+      <div class="mt-3">
+        <router-link to="/password-recovery" class="btn btn-link">¿Olvidaste tu contraseña?</router-link>
+      </div>
     </div>
   </div>
 </template>
