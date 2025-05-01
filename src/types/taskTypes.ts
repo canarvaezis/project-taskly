@@ -6,4 +6,5 @@ export interface Task {
   priority: string;
   isFavorite: boolean;
   createdAt?: Date;
+  completed: boolean; // Indicates if the task is completed
 }

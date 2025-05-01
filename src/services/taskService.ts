@@ -40,6 +40,7 @@ export const fetchTasksFromFirestore = async () => {
       deadline: doc.data().deadline || '',
       priority: doc.data().priority || 'media',
       isFavorite: doc.data().isFavorite || false,
+      completed: doc.data().completed || false, // Ensure completed is fetched
       createdAt: doc.data().createdAt?.toDate() || new Date(), // Asegura que createdAt sea un objeto Date
     }));
     return { success: true, tasks }; // Retorna solo las tareas nuevas

@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
-
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  isFavorite: boolean;
-}
+import type { Task } from '@/types/taskTypes'; // Use the Task interface from taskTypes
 
 defineProps<{ tasks: Task[] }>();
 
 const toggleFavorite = (task: Task) => {
   task.isFavorite = !task.isFavorite;
+};
+
+const toggleCompleted = (task: Task) => {
+  task.completed = !task.completed; // Toggle the completed status
 };
 
 const truncateText = (text: string, maxLength: number) => {
@@ -24,7 +22,11 @@ const truncateText = (text: string, maxLength: number) => {
     <div v-for="task in tasks" :key="task.id" class="task-card mb-3">
       <div class="d-flex gap-3">
         <div class="task-checkbox">
-          <div class="checkbox-placeholder"></div>
+          <input
+            type="checkbox"
+            :checked="task.completed"
+            @change="toggleCompleted(task)"
+          />
         </div>
         <div class="task-content flex-grow-1">
           <h3 class="task-title">{{ truncateText(task.title, 40) }}</h3>
