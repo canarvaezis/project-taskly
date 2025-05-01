@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import type { Task } from '@/types/taskTypes';
+import { updateTaskCompletionStatus } from '@/services/taskService';
 
 const props = defineProps<{ tasks: Task[] }>();
 
@@ -8,8 +9,13 @@ const toggleFavorite = (task: Task): void => {
   task.isFavorite = !task.isFavorite;
 };
 
-const toggleCompleted = (task: Task) => {
+const toggleCompleted = async (task: Task) => {
   task.completed = !task.completed;
+  const response = await updateTaskCompletionStatus(task.id, task.completed);
+  if (!response.success) {
+    console.error(response.message);
+    task.completed = !task.completed; // Revert change if update fails
+  }
 };
 
 const truncateText = (text: string, maxLength: number) => {
