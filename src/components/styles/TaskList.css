@@ -137,6 +137,31 @@
   color: white !important;
 }
 
+.task-summary {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-summary span {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.task-summary .text-success {
+  color: #908df3 !important;
+}
+
+.task-summary .text-danger {
+  color: #585858 !important;
+}
+
 @media (min-width: 768px) {
   .task-list {
     padding: 0 1.5rem;
