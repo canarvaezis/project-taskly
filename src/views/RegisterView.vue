@@ -5,7 +5,7 @@
       <RegisterForm />
       <p class="mt-3 text-center">
         ¿Ya tienes una cuenta?
-        <router-link to="/login">Inicia sesión aquí</router-link>
+        <router-link to="/">Inicia sesión aquí</router-link>
       </p>
     </div>
   </div>
