@@ -30,6 +30,10 @@ const handleTaskAdded = () => {
   loadTasks();
 };
 
+const handleTaskDeleted = (taskId: string) => {
+  tasks.value = tasks.value.filter(task => task.id !== taskId);
+};
+
 onMounted(() => {
   loadTasks();
 });
@@ -50,7 +54,7 @@ const filteredTasks = computed(() => {
     <div v-if="loading" class="text-center mt-4">Cargando tareas...</div>
     <div v-else-if="filteredTasks.length === 0" class="text-center mt-4">No se encontraron tareas.</div>
     <div v-else>
-      <ListPagination :tasks="filteredTasks" />
+      <ListPagination :tasks="filteredTasks" @taskDeleted="handleTaskDeleted" />
     </div>
   </div>
   <AppFooter />

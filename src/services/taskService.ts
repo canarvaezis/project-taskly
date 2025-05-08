@@ -1,4 +1,4 @@
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import type { Task } from '../types/taskTypes';
 
@@ -59,5 +59,14 @@ export const updateTaskCompletionStatus = async (taskId: string, completed: bool
   } catch (error) {
     console.error('Error updating task: ', error);
     return { success: false, message: 'Error al actualizar el estado de la tarea. Inténtelo de nuevo.' };
+  }
+};
+
+export const deleteTaskFromFirestore = async (taskId: string) => {
+  try {
+    await deleteDoc(doc(db, 'tasks', taskId));
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: error instanceof Error ? error.message : String(error) };
   }
 };

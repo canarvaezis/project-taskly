@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import type { Task } from '@/types/taskTypes';
-import { updateTaskCompletionStatus } from '@/services/taskService';
+import { updateTaskCompletionStatus, deleteTaskFromFirestore } from '@/services/taskService';
 
 const props = defineProps<{ tasks: Task[] }>();
+const emit = defineEmits<{
+  (e: 'taskDeleted', taskId: string): void;
+}>();
 
 const toggleFavorite = (task: Task): void => {
   task.isFavorite = !task.isFavorite;
@@ -15,6 +18,18 @@ const toggleCompleted = async (task: Task) => {
   if (!response.success) {
     console.error(response.message);
     task.completed = !task.completed; // Revert change if update fails
+  }
+};
+
+const deleteTask = async (task: Task) => {
+  const confirmDelete = confirm(`¿Eliminar la tarea "${task.title}"?`);
+  if (!confirmDelete) return;
+
+  const result = await deleteTaskFromFirestore(task.id);
+  if (result.success) {
+    emit('taskDeleted', task.id); // Comunica al padre que debe recargar las tareas
+  } else {
+    console.error('Error al eliminar la tarea:', result.message);
   }
 };
 
@@ -45,7 +60,7 @@ const truncateText = (text: string, maxLength: number) => {
           <button class="btn btn-link p-0">
             <i class="bi bi-pencil"></i>
           </button>
-          <button class="btn btn-link p-0">
+          <button class="btn btn-link p-0" @click="deleteTask(task)">
             <i class="bi bi-trash"></i>
           </button>
         </div>
