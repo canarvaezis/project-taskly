@@ -10,7 +10,7 @@ import AppFooter from '../components/AppFooter.vue';
 
 import '../components/styles/TaskList.css';
 
-const tasks = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean }[]>([]);
+const tasks = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean,completed: boolean }[]>([]);
 const searchQuery = ref('');
 const loading = ref(true);
 
@@ -27,7 +27,7 @@ const loadTasks = async () => {
 };
 
 const handleTaskAdded = () => {
-  loadTasks(); // Recarga las tareas cuando se agrega una nueva
+  loadTasks();
 };
 
 onMounted(() => {
@@ -46,7 +46,7 @@ const filteredTasks = computed(() => {
   <AppHeader />
   <div class="task-list">
     <SearchBar @update:searchQuery="searchQuery = $event" />
-    <AddTask @taskAdded="handleTaskAdded" /> <!-- Escucha el evento taskAdded -->
+    <AddTask @taskAdded="handleTaskAdded" />
     <div v-if="loading" class="text-center mt-4">Cargando tareas...</div>
     <div v-else-if="filteredTasks.length === 0" class="text-center mt-4">No se encontraron tareas.</div>
     <div v-else>
