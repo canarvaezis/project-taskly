@@ -70,7 +70,8 @@ const filteredTasks = computed(() => {
       :taskToEdit="taskToEdit"
       @taskAdded="handleTaskAdded"
       @taskUpdated="handleTaskUpdated"
-    />
+      class="mt-5"
+      />
     <div v-if="loading" class="text-center mt-4">Cargando tareas...</div>
     <div v-else-if="filteredTasks.length === 0" class="text-center mt-4">No se encontraron tareas.</div>
     <div v-else>
