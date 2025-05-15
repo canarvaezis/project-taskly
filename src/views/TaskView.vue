@@ -14,6 +14,8 @@ const tasks = ref<{ id: string; title: string; description: string; deadline: st
 const searchQuery = ref('');
 const loading = ref(true);
 const taskToEdit = ref(null);
+const priorityFilter = ref('todas');
+
 
 // Fetch tasks from Firestore on component mount
 const loadTasks = async () => {
@@ -49,16 +51,21 @@ onMounted(() => {
 
 // Filter tasks based on the search query
 const filteredTasks = computed(() => {
-  return tasks.value.filter(task =>
-    task.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+  return tasks.value.filter(task => {
+    const matchesSearch = task.title.toLowerCase().includes(searchQuery.value.toLowerCase());
+    const matchesPriority = priorityFilter.value === 'todas' || task.priority === priorityFilter.value;
+    return matchesSearch && matchesPriority;
+  });
 });
 </script>
 
 <template>
   <AppHeader />
   <div class="task-list">
-    <SearchBar @update:searchQuery="searchQuery = $event" />
+    <SearchBar
+      @update:searchQuery="searchQuery = $event"
+      @update:priorityFilter="priorityFilter = $event"
+    />
     <AddTask
       :taskToEdit="taskToEdit"
       @taskAdded="handleTaskAdded"

@@ -53,6 +53,20 @@ const truncateText = (text: string, maxLength: number) => {
         <div class="task-content flex-grow-1">
           <h3 class="task-title">{{ truncateText(task.title, 40) }}</h3>
           <p class="task-description">{{ truncateText(task.description, 70) }}</p>
+          <div
+            :style="{
+              color:
+                task.priority === 'alta'
+                  ? '#dc3545'
+                  : task.priority === 'media'
+                  ? '#ffc107'
+                  : task.priority === 'baja'
+                  ? '#198754'
+                  : 'inherit'
+            }"
+          >
+            {{ task.priority }}
+          </div>
         </div>
         <div class="task-actions d-flex gap-2">
           <button class="btn btn-link p-0" @click="toggleFavorite(task)">
