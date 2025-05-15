@@ -2,9 +2,9 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  deadline: string;
-  priority: string;
+  deadline: string;        // ISO string: "2025-05-15T17:50"
+  priority: string;        // "alta" | "media" | "baja"
   isFavorite: boolean;
-  createdAt?: Date;
-  completed: boolean; // Indicates if the task is completed
+  completed: boolean;
 }
+

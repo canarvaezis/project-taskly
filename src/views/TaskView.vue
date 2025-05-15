@@ -10,9 +10,10 @@ import AppFooter from '../components/AppFooter.vue';
 
 import '../components/styles/TaskList.css';
 
-const tasks = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean }[]>([]);
+const tasks = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean,completed: boolean }[]>([]);
 const searchQuery = ref('');
 const loading = ref(true);
+const taskToEdit = ref(null);
 
 // Fetch tasks from Firestore on component mount
 const loadTasks = async () => {
@@ -27,7 +28,19 @@ const loadTasks = async () => {
 };
 
 const handleTaskAdded = () => {
-  loadTasks(); // Recarga las tareas cuando se agrega una nueva
+  loadTasks();
+};
+
+const handleTaskUpdated = () => {
+  loadTasks();
+};
+
+const handleTaskDeleted = (taskId: string) => {
+  tasks.value = tasks.value.filter(task => task.id !== taskId);
+};
+
+const handleEditTask = (task: { id: string; title: string; description: string; deadline: string; priority: string }) => {
+  taskToEdit.value = task;
 };
 
 onMounted(() => {
@@ -46,11 +59,15 @@ const filteredTasks = computed(() => {
   <AppHeader />
   <div class="task-list">
     <SearchBar @update:searchQuery="searchQuery = $event" />
-    <AddTask @taskAdded="handleTaskAdded" /> <!-- Escucha el evento taskAdded -->
+    <AddTask
+      :taskToEdit="taskToEdit"
+      @taskAdded="handleTaskAdded"
+      @taskUpdated="handleTaskUpdated"
+    />
     <div v-if="loading" class="text-center mt-4">Cargando tareas...</div>
     <div v-else-if="filteredTasks.length === 0" class="text-center mt-4">No se encontraron tareas.</div>
     <div v-else>
-      <ListPagination :tasks="filteredTasks" />
+      <ListPagination :tasks="filteredTasks" @taskDeleted="handleTaskDeleted" @editTask="handleEditTask" />
     </div>
   </div>
   <AppFooter />

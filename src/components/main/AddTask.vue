@@ -1,83 +1,93 @@
-<script lang="ts">
-import { ref, defineEmits } from 'vue';
-import { saveTaskToFirestore } from '@/services/taskService';
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { saveTaskToFirestore, updateTaskInFirestore } from '@/services/taskService';
+import type { Task } from '@/types/taskTypes';
 
-export default {
-  name: 'AddTask',
-  setup() {
-    const emit = defineEmits(['taskAdded']); // Define el evento 'taskAdded'
-    const showPopup = ref(false);
-    const title = ref('');
-    const description = ref('');
-    const deadline = ref('');
-    const priority = ref('media');
-    const notification = ref('');
+const props = defineProps<{ taskToEdit?: Task }>();
+const emit = defineEmits(['taskAdded', 'taskUpdated']);
 
-    const togglePopup = () => {
-      showPopup.value = !showPopup.value;
-      notification.value = ''; // Clear notification when popup is toggled
-    };
+const showPopup = ref(false);
+const title = ref('');
+const description = ref('');
+const deadline = ref('');
+const priority = ref('media');
+const notification = ref('');
+const editingId = ref<string | null>(null); // Guardar ID si se edita
 
-    const saveTask = async (e: Event) => {
-      e.preventDefault();
-      if (title.value.trim().length < 3) {
-        notification.value = 'El título debe tener al menos 3 caracteres.';
-        return;
-      }
-      if (!description.value.trim()) {
-        notification.value = 'La descripción no puede estar vacía.';
-        return;
-      }
-      if (!deadline.value) {
-        notification.value = 'Debe seleccionar una fecha y hora límite.';
-        return;
-      }
-      const currentDateTime = new Date();
-      const selectedDateTime = new Date(deadline.value);
-      if (selectedDateTime < currentDateTime) {
-        notification.value = 'La fecha y hora límite no pueden ser anteriores a la fecha actual.';
-        return;
-      }
+watch(() => props.taskToEdit, (newTask) => {
+  if (newTask) {
+    title.value = newTask.title;
+    description.value = newTask.description;
+    deadline.value = newTask.deadline;
+    priority.value = newTask.priority;
+    editingId.value = newTask.id;
+    showPopup.value = true;
+  }
+});
 
-      const task = {
-        id: Date.now().toString(), // Generate a unique ID
-        title: title.value,
-        description: description.value,
-        deadline: deadline.value,
-        priority: priority.value,
-        isFavorite: false, // Default value for isFavorite
-        completed: false, // Default value for completed
-      };
+const togglePopup = () => {
+  showPopup.value = !showPopup.value;
+  notification.value = '';
+  if (!showPopup.value) {
+    // Limpiar campos si se cierra
+    title.value = '';
+    description.value = '';
+    deadline.value = '';
+    priority.value = 'media';
+    editingId.value = null;
+  }
+};
 
-      const result = await saveTaskToFirestore(task);
-      notification.value = result.message;
+const saveTask = async (e: Event) => {
+  e.preventDefault();
+  if (title.value.trim().length < 3) {
+    notification.value = 'El título debe tener al menos 3 caracteres.';
+    return;
+  }
+  if (!description.value.trim()) {
+    notification.value = 'La descripción no puede estar vacía.';
+    return;
+  }
+  if (!deadline.value) {
+    notification.value = 'Debe seleccionar una fecha y hora límite.';
+    return;
+  }
 
-      // Cierra el popup independientemente del resultado
-      togglePopup();
+  const currentDateTime = new Date();
+  const selectedDateTime = new Date(deadline.value);
+  if (selectedDateTime < currentDateTime) {
+    notification.value = 'La fecha y hora límite no pueden ser anteriores a la fecha actual.';
+    return;
+  }
 
-      if (result.success) {
-        emit('taskAdded'); // Emite el evento cuando se guarda la tarea
-        // Reset form fields
-        title.value = '';
-        description.value = '';
-        deadline.value = '';
-        priority.value = 'media';
-      }
-    };
+  const task = {
+    id: editingId.value ?? Date.now().toString(),
+    title: title.value,
+    description: description.value,
+    deadline: deadline.value,
+    priority: priority.value,
+    isFavorite: false,
+    completed: false,
+  };
 
-    return {
-      showPopup,
-      title,
-      description,
-      deadline,
-      priority,
-      notification,
-      togglePopup,
-      saveTask,
-    };
-  },
+  const result = editingId.value
+    ? await updateTaskInFirestore(task)
+    : await saveTaskToFirestore(task);
+
+  notification.value = result.message;
+
+  togglePopup();
+
+  if (result.success) {
+    if (editingId.value) {
+      emit('taskUpdated', task); // Emitir tarea actualizada
+    } else {
+      emit('taskAdded');
+    }
+  }
 };
 </script>
+
 
 <template>
   <div class="add-task-container mb-4 mt-3">
@@ -95,7 +105,7 @@ export default {
       style="background-color: rgba(0, 0, 0, 0.5);"
     >
       <div class="popup-content bg-white p-4 rounded shadow">
-        <h5 class="mb-3">Crear Nueva Tarea</h5>
+        <h5 class="mb-3">{{ editingId ? 'Editar Tarea' : 'Crear Nueva Tarea' }}</h5>
         <form @submit="saveTask">
           <div class="mb-3">
             <label for="task-title" class="form-label">Título</label>
