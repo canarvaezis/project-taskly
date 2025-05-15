@@ -1,4 +1,4 @@
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import type { Task } from '../types/taskTypes';
 
@@ -68,5 +68,19 @@ export const deleteTaskFromFirestore = async (taskId: string) => {
     return { success: true };
   } catch (error) {
     return { success: false, message: error instanceof Error ? error.message : String(error) };
+  }
+};
+
+export const updateTaskInFirestore = async (task: Task) => {
+  try {
+    await setDoc(doc(db, 'tasks', task.id), {
+      ...task,
+      updatedAt: new Date(),
+    }, { merge: true }); // merge:true mantiene los campos no enviados
+
+    return { success: true, message: 'Tarea actualizada correctamente.' };
+  } catch (error) {
+    console.error('Error al actualizar tarea:', error);
+    return { success: false, message: 'Error al actualizar la tarea.' };
   }
 };

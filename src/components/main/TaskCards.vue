@@ -6,6 +6,7 @@ import { updateTaskCompletionStatus, deleteTaskFromFirestore } from '@/services/
 const props = defineProps<{ tasks: Task[] }>();
 const emit = defineEmits<{
   (e: 'taskDeleted', taskId: string): void;
+  (e: 'editTask', task: Task): void;
 }>();
 
 const toggleFavorite = (task: Task): void => {
@@ -57,7 +58,7 @@ const truncateText = (text: string, maxLength: number) => {
           <button class="btn btn-link p-0" @click="toggleFavorite(task)">
             <i class="bi" :class="task.isFavorite ? 'bi-star-fill' : 'bi-star'"></i>
           </button>
-          <button class="btn btn-link p-0">
+          <button class="btn btn-link p-0" @click="emit('editTask', task)">
             <i class="bi bi-pencil"></i>
           </button>
           <button class="btn btn-link p-0" @click="deleteTask(task)">

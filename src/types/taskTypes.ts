@@ -6,6 +6,5 @@ export interface Task {
   priority: string;        // "alta" | "media" | "baja"
   isFavorite: boolean;
   completed: boolean;
-  userUid: string;
 }
 

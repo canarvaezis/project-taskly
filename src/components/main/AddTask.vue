@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { saveTaskToFirestore } from '@/services/taskService';
+import { ref, watch } from 'vue';
+import { saveTaskToFirestore, updateTaskInFirestore } from '@/services/taskService';
+import type { Task } from '@/types/taskTypes';
 
-const emit = defineEmits(['taskAdded']);
+const props = defineProps<{ taskToEdit?: Task }>();
+const emit = defineEmits(['taskAdded', 'taskUpdated']);
 
 const showPopup = ref(false);
 const title = ref('');
@@ -10,10 +12,30 @@ const description = ref('');
 const deadline = ref('');
 const priority = ref('media');
 const notification = ref('');
+const editingId = ref<string | null>(null); // Guardar ID si se edita
+
+watch(() => props.taskToEdit, (newTask) => {
+  if (newTask) {
+    title.value = newTask.title;
+    description.value = newTask.description;
+    deadline.value = newTask.deadline;
+    priority.value = newTask.priority;
+    editingId.value = newTask.id;
+    showPopup.value = true;
+  }
+});
 
 const togglePopup = () => {
   showPopup.value = !showPopup.value;
   notification.value = '';
+  if (!showPopup.value) {
+    // Limpiar campos si se cierra
+    title.value = '';
+    description.value = '';
+    deadline.value = '';
+    priority.value = 'media';
+    editingId.value = null;
+  }
 };
 
 const saveTask = async (e: Event) => {
@@ -39,7 +61,7 @@ const saveTask = async (e: Event) => {
   }
 
   const task = {
-    id: Date.now().toString(),
+    id: editingId.value ?? Date.now().toString(),
     title: title.value,
     description: description.value,
     deadline: deadline.value,
@@ -48,17 +70,20 @@ const saveTask = async (e: Event) => {
     completed: false,
   };
 
-  const result = await saveTaskToFirestore(task);
+  const result = editingId.value
+    ? await updateTaskInFirestore(task)
+    : await saveTaskToFirestore(task);
+
   notification.value = result.message;
 
   togglePopup();
 
   if (result.success) {
-    emit('taskAdded');
-    title.value = '';
-    description.value = '';
-    deadline.value = '';
-    priority.value = 'media';
+    if (editingId.value) {
+      emit('taskUpdated', task); // Emitir tarea actualizada
+    } else {
+      emit('taskAdded');
+    }
   }
 };
 </script>
@@ -80,7 +105,7 @@ const saveTask = async (e: Event) => {
       style="background-color: rgba(0, 0, 0, 0.5);"
     >
       <div class="popup-content bg-white p-4 rounded shadow">
-        <h5 class="mb-3">Crear Nueva Tarea</h5>
+        <h5 class="mb-3">{{ editingId ? 'Editar Tarea' : 'Crear Nueva Tarea' }}</h5>
         <form @submit="saveTask">
           <div class="mb-3">
             <label for="task-title" class="form-label">Título</label>

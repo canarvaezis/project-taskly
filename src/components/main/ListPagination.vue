@@ -7,6 +7,7 @@ const props = defineProps<{ tasks: { id: string; title: string; description: str
 
 const emit = defineEmits<{
   (e: 'taskDeleted', taskId: string): void;
+  (e: 'editTask', task: { id: string; title: string; description: string; deadline: string; priority: string }): void;
 }>();
 
 const currentPage = ref(1);
@@ -46,7 +47,11 @@ const incompleteTasksCount = computed(() => props.tasks.filter(task => !task.com
     <span class="text-success fw-bold">Completadas: {{ completedTasksCount }}</span>
     <span class="text-danger fw-bold">Incompletas: {{ incompleteTasksCount }}</span>
   </div>
-  <TaskCards :tasks="paginatedTasks" @taskDeleted="emit('taskDeleted', $event)"/>
+  <TaskCards
+    :tasks="paginatedTasks"
+    @taskDeleted="emit('taskDeleted', $event)"
+    @editTask="emit('editTask', $event)"
+  />
   <div class="pagination d-flex justify-content-center gap-2 mt-4">
     <button
       class="btn btn-outline-secondary px-3"
