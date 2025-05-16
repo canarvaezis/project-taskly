@@ -70,7 +70,7 @@ export default defineComponent({
         const response = await registerUser(form.email, form.password, form.username);
         if (response.success) {
           alert(response.message);
-          router.push('/login'); // Redirect to login page
+          router.push('/'); // Redirect to login page
         } else {
           alert(response.message);
         }

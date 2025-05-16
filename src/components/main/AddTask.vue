@@ -13,6 +13,10 @@ const deadline = ref('');
 const priority = ref('media');
 const notification = ref('');
 const editingId = ref<string | null>(null); // Guardar ID si se edita
+const tags = ref<string[]>([]);
+const customTag = ref('');
+
+// ...existing code...
 
 watch(() => props.taskToEdit, (newTask) => {
   if (newTask) {
@@ -21,6 +25,7 @@ watch(() => props.taskToEdit, (newTask) => {
     deadline.value = newTask.deadline;
     priority.value = newTask.priority;
     editingId.value = newTask.id;
+    tags.value = newTask.tags ? [...newTask.tags] : [];
     showPopup.value = true;
   }
 });
@@ -35,6 +40,7 @@ const togglePopup = () => {
     deadline.value = '';
     priority.value = 'media';
     editingId.value = null;
+    tags.value = [];
   }
 };
 
@@ -68,6 +74,7 @@ const saveTask = async (e: Event) => {
     priority: priority.value,
     isFavorite: false,
     completed: false,
+    tags: [...tags.value],
   };
 
   const result = editingId.value
@@ -86,8 +93,19 @@ const saveTask = async (e: Event) => {
     }
   }
 };
-</script>
 
+const addCustomTag = () => {
+  const tag = customTag.value.trim();
+  if (tag && !tags.value.includes(tag)) {
+    tags.value.push(tag);
+  }
+  customTag.value = '';
+};
+
+const removeTag = (tag: string) => {
+  tags.value = tags.value.filter(t => t !== tag);
+};
+</script>
 
 <template>
   <div class="add-task-container mb-4 mt-3">
@@ -147,6 +165,29 @@ const saveTask = async (e: Event) => {
               <option value="media">Media</option>
               <option value="baja">Baja</option>
             </select>
+          </div>
+          <div class="mb-3">
+            <label for="task-tags" class="form-label">Etiquetas</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Agregar etiqueta"
+                v-model="customTag"
+                @keyup.enter="addCustomTag"
+              />
+              <button class="btn btn-outline-primary" type="button" @click="addCustomTag">Agregar</button>
+            </div>
+            <div class="mt-2" v-if="tags.length">
+              <span
+                v-for="tag in tags"
+                :key="tag"
+                class="badge bg-primary me-1"
+                style="cursor:pointer;"
+                @click="removeTag(tag)"
+                title="Quitar etiqueta"
+              >{{ tag }} &times;</span>
+            </div>
           </div>
           <div v-if="notification" class="alert alert-info mb-3">
             {{ notification }}

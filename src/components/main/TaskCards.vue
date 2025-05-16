@@ -37,6 +37,42 @@ const deleteTask = async (task: Task) => {
 const truncateText = (text: string, maxLength: number) => {
   return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 };
+
+const getDeadlineAlert = (task: Task) => {
+  if (task.completed) {
+    return { text: 'Completada', color: '#198754', icon: 'bi-check-circle-fill' };
+  }
+  const now = new Date();
+  const deadline = new Date(task.deadline);
+  const diffMs = deadline.getTime() - now.getTime();
+  const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+  if (diffDays < 0) {
+    return { text: '¡Vencida!', color: '#dc3545', icon: 'bi-exclamation-circle-fill' };
+  } else if (diffDays < 1) {
+    return { text: '¡Por vencer!', color: '#ffc107', icon: 'bi-exclamation-triangle-fill' };
+  } else {
+    return { text: 'A tiempo', color: '#0d6efd', icon: 'bi-clock-fill' };
+  }
+};
+
+const getDeadlineStyle = (task: Task) => {
+  if (task.completed) {
+    return { color: '#198754', fontWeight: 'bold' }; // verde para completadas
+  }
+  const now = new Date();
+  const deadline = new Date(task.deadline);
+  const diffMs = deadline.getTime() - now.getTime();
+  const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+  if (diffDays < 0) {
+    return { color: '#dc3545', fontWeight: 'bold' }; // rojo
+  } else if (diffDays < 1) {
+    return { color: '#ffc107', fontWeight: 'bold' }; // amarillo
+  } else {
+    return { color: '#198754' }; // verde
+  }
+};
 </script>
 
 <template>
@@ -52,6 +88,17 @@ const truncateText = (text: string, maxLength: number) => {
         </div>
         <div class="task-content flex-grow-1">
           <h3 class="task-title">{{ truncateText(task.title, 40) }}</h3>
+          <div
+            class="task-deadline"
+            :style="getDeadlineStyle(task)"
+            style="font-size: 0.95em;"
+          >
+            {{ task.deadline.slice(0, 10) }}
+            <span v-if="getDeadlineAlert(task)" :style="{ color: getDeadlineAlert(task)?.color, marginLeft: '8px', fontWeight: 'bold' }">
+              <i class="bi" :class="getDeadlineAlert(task)?.icon"></i>
+              {{ getDeadlineAlert(task)?.text }}
+            </span>
+          </div>
           <p class="task-description">{{ truncateText(task.description, 70) }}</p>
           <div
             :style="{
@@ -68,7 +115,7 @@ const truncateText = (text: string, maxLength: number) => {
             {{ task.priority }}
           </div>
         </div>
-        <div class="task-actions d-flex gap-2">
+        <div class="task-actions d-flex flex-column gap-2 align-items-start">
           <button class="btn btn-link p-0" @click="toggleFavorite(task)">
             <i class="bi" :class="task.isFavorite ? 'bi-star-fill' : 'bi-star'"></i>
           </button>

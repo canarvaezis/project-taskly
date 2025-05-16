@@ -6,5 +6,6 @@ export interface Task {
   priority: string;        // "alta" | "media" | "baja"
   isFavorite: boolean;
   completed: boolean;
+  tags: string[];          // etiquetas predefinidas
 }
 
