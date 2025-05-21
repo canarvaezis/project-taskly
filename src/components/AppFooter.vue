@@ -1,22 +1,22 @@
 <template>
   <footer class="fixed-bottom bg-white shadow-sm">
     <div class="container">
-      <div class="d-flex justify-content-between align-items-center py-3">
-        <button class="btn btn-link text-decoration-none">
-          <i class="bi bi-list-check me-2"></i>Ver Todos
-        </button>
-        <div class="divider"></div>
-        <button class="btn btn-link text-decoration-none">
-          <i class="bi bi-star me-2"></i>Favoritos
-        </button>
-        <div class="divider"></div>
-        <button class="btn btn-link text-decoration-none">
-          <i class="bi bi-gear me-2"></i>Configuraciones
+      <div class="d-flex justify-content-center align-items-center py-3">
+        <button class="btn btn-link text-decoration-none" @click="logout">
+          <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
         </button>
       </div>
     </div>
   </footer>
 </template>
+
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+const router = useRouter()
+function logout() {
+  router.push({ name: 'login' })
+}
+</script>
 
 <style scoped>
 .btn-link {
@@ -35,11 +35,5 @@
 .btn-link:hover {
   color: #716bee !important;
   transform: translateY(-1px);
-}
-
-.divider {
-  width: 2px;
-  height: 24px;
-  background-color: #e9ecef;
 }
 </style>

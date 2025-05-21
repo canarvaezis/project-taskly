@@ -9,10 +9,6 @@ const emit = defineEmits<{
   (e: 'editTask', task: Task): void;
 }>();
 
-const toggleFavorite = (task: Task): void => {
-  task.isFavorite = !task.isFavorite;
-};
-
 const toggleCompleted = async (task: Task) => {
   task.completed = !task.completed;
   const response = await updateTaskCompletionStatus(task.id, task.completed);
@@ -116,9 +112,6 @@ const getDeadlineStyle = (task: Task) => {
           </div>
         </div>
         <div class="task-actions d-flex flex-column gap-2 align-items-start">
-          <button class="btn btn-link p-0" @click="toggleFavorite(task)">
-            <i class="bi" :class="task.isFavorite ? 'bi-star-fill' : 'bi-star'"></i>
-          </button>
           <button class="btn btn-link p-0" @click="emit('editTask', task)">
             <i class="bi bi-pencil"></i>
           </button>
