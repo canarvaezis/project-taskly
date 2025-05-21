@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, defineProps } from 'vue';
 import TaskCards from './TaskCards.vue';
+import type { Task } from '@/types/taskTypes';
 
 // Recibe las tareas como una propiedad
-const props = defineProps<{ tasks: { id: string; title: string; description: string; isFavorite: boolean; deadline: string; priority: string; completed?: boolean }[] }>();
+const props = defineProps<{ tasks: Task[] }>();
 
 const emit = defineEmits<{
   (e: 'taskDeleted', taskId: string): void;
-  (e: 'editTask', task: { id: string; title: string; description: string; deadline: string; priority: string }): void;
+  (e: 'editTask', task: Task): void;
 }>();
 
 const currentPage = ref(1);
@@ -16,7 +17,8 @@ const itemsPerPage = 4; // Número de elementos por página
 const tasksWithDefaults = computed(() =>
   props.tasks.map(task => ({
     ...task,
-    completed: task.completed ?? false, // Establece un valor predeterminado para 'completed'
+    completed: task.completed ?? false,
+    tags: Array.isArray(task.tags) ? task.tags : [],
   }))
 );
 

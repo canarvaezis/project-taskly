@@ -10,10 +10,10 @@ import AppFooter from '../components/AppFooter.vue';
 
 import '../components/styles/TaskList.css';
 
-const tasks = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean,completed: boolean }[]>([]);
+const tasks = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean; completed: boolean; tags: string[] }[]>([]);
 const searchQuery = ref('');
 const loading = ref(true);
-const taskToEdit = ref(null);
+const taskToEdit = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean; completed: boolean; tags: string[] } | undefined>(undefined);
 const priorityFilter = ref('todas');
 
 
@@ -22,7 +22,10 @@ const loadTasks = async () => {
   loading.value = true;
   const result = await fetchTasksFromFirestore();
   if (result.success) {
-    tasks.value = result.tasks || [];
+    tasks.value = (result.tasks || []).map((task: any) => ({
+      ...task,
+      tags: Array.isArray(task.tags) ? task.tags : []
+    }));
   } else {
     console.error(result.message);
   }
@@ -41,7 +44,7 @@ const handleTaskDeleted = (taskId: string) => {
   tasks.value = tasks.value.filter(task => task.id !== taskId);
 };
 
-const handleEditTask = (task: { id: string; title: string; description: string; deadline: string; priority: string }) => {
+const handleEditTask = (task: { id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean; completed: boolean; tags: string[] }) => {
   taskToEdit.value = task;
 };
 
