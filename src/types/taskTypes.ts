@@ -6,6 +6,7 @@ export interface Task {
   priority: string;        // "alta" | "media" | "baja"
   isFavorite: boolean;
   completed: boolean;
-  tags: string[];          // etiquetas predefinidas
+  tags: string[];
+  uid: string;          // ID del usuario que creó la tarea
 }
 

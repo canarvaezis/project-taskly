@@ -1,4 +1,4 @@
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, query, doc, updateDoc, deleteDoc, setDoc, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import type { Task } from '../types/taskTypes';
 
@@ -17,10 +17,15 @@ const db = getFirestore(app);
 // Function to save a task to Firestore
 export const saveTaskToFirestore = async (task: Task) => {
   try {
+    const uid = localStorage.getItem('uid');
+    if (!uid) throw new Error('Usuario no autenticado.');
+
     await addDoc(collection(db, 'tasks'), {
       ...task,
+      uid, // Asigna el uid del usuario creador
       createdAt: new Date(),
     });
+
     return { success: true, message: 'Tarea guardada exitosamente.' };
   } catch (error) {
     console.error('Error adding document: ', error);
@@ -31,22 +36,30 @@ export const saveTaskToFirestore = async (task: Task) => {
 // Function to fetch tasks from Firestore
 export const fetchTasksFromFirestore = async () => {
   try {
-    const tasksQuery = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
+    const uid = localStorage.getItem('uid');
+    if (!uid) throw new Error('Usuario no autenticado.');
+
+    // Consulta solo por uid sin ordenar
+    const tasksQuery = query(collection(db, 'tasks'), where('uid', '==', uid));
     const querySnapshot = await getDocs(tasksQuery);
-    const tasks = querySnapshot.docs.map(doc => ({
+
+    const tasks: Task[] = querySnapshot.docs.map(doc => ({
       id: doc.id,
       title: doc.data().title || '',
       description: doc.data().description || '',
       deadline: doc.data().deadline || '',
       priority: doc.data().priority || 'media',
       isFavorite: doc.data().isFavorite || false,
-      completed: doc.data().completed || false, // Ensure completed is fetched
-      createdAt: doc.data().createdAt?.toDate() || new Date(), // Asegura que createdAt sea un objeto Date
+      completed: doc.data().completed || false,
+      tags: doc.data().tags || [],
+      createdAt: doc.data().createdAt?.toDate() || new Date(),
+      uid: doc.data().uid || '', // Add uid property
     }));
-    return { success: true, tasks }; // Retorna solo las tareas nuevas
+
+    return { success: true, tasks };
   } catch (error) {
-    console.error('Error fetching tasks: ', error);
-    return { success: false, message: 'Error al obtener las tareas. Inténtelo de nuevo.' };
+    console.error('Error fetching user tasks: ', error);
+    return { success: false, message: 'Error al obtener las tareas del usuario.' };
   }
 };
 

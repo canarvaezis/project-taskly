@@ -36,6 +36,11 @@ export const registerUser = async (email: string, password: string, name: string
 export const loginUser = async (email: string, password: string) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid;
+
+    // Guardar UID en localStorage
+    localStorage.setItem('uid', uid);
+
     return {
       success: true,
       message: 'Inicio de sesión exitoso.',
@@ -50,7 +55,6 @@ export const loginUser = async (email: string, password: string) => {
     };
   }
 };
-
 // Function to handle password recovery
 export const sendPasswordReset = async (email: string) => {
   const auth = getAuth();
