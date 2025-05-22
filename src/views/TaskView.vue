@@ -10,27 +10,45 @@ import AppFooter from '../components/AppFooter.vue';
 
 import '../components/styles/TaskList.css';
 
-const tasks = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean; completed: boolean; tags: string[] }[]>([]);
+type Task = {
+  id: string;
+  title: string;
+  description: string;
+  deadline: string;
+  priority: string;
+  isFavorite: boolean;
+  completed: boolean;
+  tags: string[];
+  uid?: string;
+};
+
+const tasks = ref<Task[]>([]);
+const loading = ref(false);
 const searchQuery = ref('');
-const loading = ref(true);
-const taskToEdit = ref<{ id: string; title: string; description: string; deadline: string; priority: string; isFavorite: boolean; completed: boolean; tags: string[] } | undefined>(undefined);
 const priorityFilter = ref('todas');
+const taskToEdit = ref<Task | null>(null);
 
-
-// Fetch tasks from Firestore on component mount
 const loadTasks = async () => {
   loading.value = true;
   const result = await fetchTasksFromFirestore();
   if (result.success) {
-    tasks.value = (result.tasks || []).map((task: any) => ({
-      ...task,
-      tags: Array.isArray(task.tags) ? task.tags : []
+    tasks.value = (result.tasks || []).map((task: Task) => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      deadline: task.deadline,
+      priority: task.priority,
+      isFavorite: task.isFavorite,
+      completed: task.completed,
+      tags: Array.isArray(task.tags) ? task.tags : [],
+      uid: task.uid || '',  // Asegúrate de traer uid o asigna string vacío si no existe
     }));
   } else {
     console.error(result.message);
   }
   loading.value = false;
 };
+
 
 const handleTaskAdded = () => {
   loadTasks();

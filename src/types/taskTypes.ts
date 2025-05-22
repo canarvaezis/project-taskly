@@ -7,6 +7,6 @@ export interface Task {
   isFavorite: boolean;
   completed: boolean;
   tags: string[];
-  uid: string;          // ID del usuario que creó la tarea
+  uid?: string;          // ID del usuario que creó la tarea
 }
 

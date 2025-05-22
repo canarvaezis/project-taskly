@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import { saveTaskToFirestore, updateTaskInFirestore } from '@/services/taskService';
 import type { Task } from '@/types/taskTypes';
 
-const props = defineProps<{ taskToEdit?: Task }>();
+const props = defineProps<{ taskToEdit?: Task | null }>();
 const emit = defineEmits(['taskAdded', 'taskUpdated']);
 
 const showPopup = ref(false);
@@ -46,14 +46,17 @@ const togglePopup = () => {
 
 const saveTask = async (e: Event) => {
   e.preventDefault();
+
   if (title.value.trim().length < 3) {
     notification.value = 'El título debe tener al menos 3 caracteres.';
     return;
   }
+
   if (!description.value.trim()) {
     notification.value = 'La descripción no puede estar vacía.';
     return;
   }
+
   if (!deadline.value) {
     notification.value = 'Debe seleccionar una fecha y hora límite.';
     return;
@@ -66,7 +69,14 @@ const saveTask = async (e: Event) => {
     return;
   }
 
-  const task = {
+  // 👉 Recuperar el UID del usuario actual
+  const uid = localStorage.getItem('uid');
+  if (!uid) {
+    notification.value = 'Error: No se pudo identificar el usuario.';
+    return;
+  }
+
+  const task: Task = {
     id: editingId.value ?? Date.now().toString(),
     title: title.value,
     description: description.value,
@@ -75,6 +85,7 @@ const saveTask = async (e: Event) => {
     isFavorite: false,
     completed: false,
     tags: [...tags.value],
+    uid, // ✅ Añadir el uid requerido por el tipo Task
   };
 
   const result = editingId.value
@@ -87,7 +98,7 @@ const saveTask = async (e: Event) => {
 
   if (result.success) {
     if (editingId.value) {
-      emit('taskUpdated', task); // Emitir tarea actualizada
+      emit('taskUpdated', task);
     } else {
       emit('taskAdded');
     }
